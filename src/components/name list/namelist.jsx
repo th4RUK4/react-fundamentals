@@ -1,7 +1,9 @@
-import React,{ useState} from 'react';
+import React,{ useEffect, useState} from 'react';
 import NameListItem from './namelistitem';
 
 function NameList() {
+
+    const[loadData, setLoadData] = useState(new Date());
 
     const[nameList, setNameList] = useState([{
             id: 1,
@@ -53,7 +55,15 @@ function NameList() {
             medium: "https://randomuser.me/api/portraits/men/75.jpg",
             },
         },
-    ]);     
+    ]);  
+    
+    useEffect(() => {
+        fetch("https://randomuser.me/api").then(response => {
+            return response.json();
+        }).then(responseData => {
+            setNameList(nameList => [...nameList, responseData.results[0]]);
+        })
+    },[loadData]);
 
     function nameListComp() {
         return nameList.map(aName => (
@@ -69,8 +79,10 @@ function NameList() {
     }
 
     const addUserHandler = () => {
-        const newUser = {
-            id: 6,
+        setLoadData(new Date());
+    };
+/*        const newUser = {
+            id: new Date,
             name: { title: "Mr", first: "Deniz", last: "Azzinee" },
             location: { city: "Colombo" },
             email: "michael.wilson@example.com",
@@ -92,8 +104,8 @@ function NameList() {
                 id: Math.max(...currentNameList.map((user) => user.id), 0) + 1,
             },
         ]);
-    };
-
+    
+*/
     return (
         <React.Fragment>
             <div className="container mt-4">
