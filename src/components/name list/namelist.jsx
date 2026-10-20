@@ -1,10 +1,9 @@
-import React from 'react';
+import React,{ useState} from 'react';
 import NameListItem from './namelistitem';
 
 function NameList() {
 
-    const nameList = [
-        {
+    const[nameList, setNameList] = useState([{
             id: 1,
             name: { title: "Mr", first: "Jennie", last: "Nichols" },
             location: { city: "Billings" },
@@ -44,7 +43,7 @@ function NameList() {
             medium: "https://randomuser.me/api/portraits/women/68.jpg",
             },
         },
-       {
+        {
             id: 5,
             name: { title: "Mr", first: "Michael", last: "Wilson" },
             location: { city: "Sydney" },
@@ -54,24 +53,53 @@ function NameList() {
             medium: "https://randomuser.me/api/portraits/men/75.jpg",
             },
         },
-];
+    ]);     
 
-const nameListComp = () => {
-    return nameList.map(aName => (
-        <NameListItem
-        key={aName.id}
-            name={`${aName.name.first} ${aName.name.last}`}
-            city={aName.location.city}                  
-            email={aName.email}
-            birthday={aName.dob.date}
-            avatar={aName.picture.medium}
-        />
-    ));
-};
+    function nameListComp() {
+        return nameList.map(aName => (
+            <NameListItem
+                key={aName.id}
+                name={`${aName.name.first} ${aName.name.last}`}
+                city={aName.location.city}
+                email={aName.email}
+                birthday={aName.dob.date}
+                avatar={aName.picture.medium} 
+            />
+        ));
+    }
+
+    const addUserHandler = () => {
+        const newUser = {
+            id: 6,
+            name: { title: "Mr", first: "Deniz", last: "Azzinee" },
+            location: { city: "Colombo" },
+            email: "michael.wilson@example.com",
+            dob: { date: "2000-09-05T12:45:10.688Z", age: 35 },
+            picture: {
+            medium: "https://randomuser.me/api/portraits/men/65.jpg",
+            },
+        };
+
+        //setNameList(currentNameList => currentNameList.concat(newUser));
+
+        // Spread Operator
+        //setNameList([...NameList, newUser]);
+
+        setNameList((currentNameList) => [
+            ...currentNameList,
+            {
+                ...newUser,
+                id: Math.max(...currentNameList.map((user) => user.id), 0) + 1,
+            },
+        ]);
+    };
 
     return (
         <React.Fragment>
-            <div className="container mt=4">
+            <div className="container mt-4">
+            <button className="btn btn-primary mb-2" onClick={addUserHandler}>
+                Add Name
+            </button>
             <ul className="list-group">{nameListComp()}</ul>
             </div>
         </React.Fragment>
